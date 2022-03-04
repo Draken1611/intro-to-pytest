@@ -1,0 +1,45 @@
+name: test nodejs
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        uses: actions/checkout@v3
+      - 
+        name: Setup pyton
+        uses: actions/setup-python@v2
+      - 
+        run: pip install -r requirements.txt
+      - 
+        run: pytest 1> monrapport.txt
+      - 
+        uses: actions/upload-artifact@v3
+        with:
+          name: reports
+          path: ./monrapport.txt
+      -
+        if: failure()
+        name: Create an issue
+        uses: actions-ecosystem/action-create-issue@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          title: urgent
+          body: |
+            ## This week's TODO
+
+            - [ ] Have a meeting with UX team
+            - [ ] Check the dashboard
+  pull-request:
+    needs: test
+    name: PullRequestAction
+    runs-on: ubuntu-latest
+    steps:
+      - name: pull-request-action
+        uses: vsoch/pull-request-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_BRANCH: "master"
