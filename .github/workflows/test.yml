@@ -16,6 +16,11 @@ jobs:
         run: pip install -r requirements.txt
       - 
         run: pytest
+      - 
+        uses: actions/upload-artifact@v3
+        with:
+          name: reports
+          path: /var/log
       -
         if: failure()
         name: Create an issue
@@ -38,6 +43,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST_BRANCH: "master"
-  
-
-
