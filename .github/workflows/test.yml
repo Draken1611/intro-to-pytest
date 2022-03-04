@@ -15,12 +15,12 @@ jobs:
       - 
         run: pip install -r requirements.txt
       - 
-        run: pytest
+        run: pytest 1> monrapport.txt
       - 
         uses: actions/upload-artifact@v3
         with:
           name: reports
-          path: /var/log
+          path: ./monrapport.txt
       -
         if: failure()
         name: Create an issue
